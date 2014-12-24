@@ -1,0 +1,13 @@
+Description:
+    Creates a new page's mod
+
+Example:
+    yo admix:mod thing pageName
+
+    This will create:
+        app/pageName/mods/thing.js
+
+    yo admix:mod thing
+
+    This will create:
+        app/mods/thing.js

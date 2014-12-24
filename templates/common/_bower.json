@@ -1,0 +1,10 @@
+{
+  "name": "<%= _.slugify(_.humanize(appname)) %>",
+  "version": "0.0.0",
+  "dependencies": {
+    "framework7": "0.9.7",
+    "seajs": "~2.3.0",
+    "zepto": "~1.1.6"
+  }<% if (appPath) { %>,
+  "appPath": "<%= appPath %>"<% } %>
+}

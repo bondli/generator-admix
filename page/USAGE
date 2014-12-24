@@ -1,0 +1,11 @@
+Description:
+    Creates a new mobile page
+
+Example:
+    yo admix:page your-page-name
+
+    This will create:
+    	htmls/you-page-name.html
+        app/pages/your-page-name/index.js
+        app/pages/your-page-name/index.scss
+        app/pages/your-page-name/mods/

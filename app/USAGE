@@ -1,0 +1,16 @@
+Description:
+    Creates a default mobile project
+
+Example:
+    yo admix
+
+    This will create:
+        Gruntfile.js
+        bower.json
+        package.json
+
+        app
+
+        build
+
+        htmls

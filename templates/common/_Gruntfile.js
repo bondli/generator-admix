@@ -178,7 +178,7 @@ module.exports = function (grunt) {
           src: [
             'pages/**/*.js',
             'mods/**/*.js',
-            'bower_components/admix-ui/js/**/*.js'],
+            'bower_components/admix-ui/**/*.js'],
           dest: '.tmp/script1/'
         }]
       }

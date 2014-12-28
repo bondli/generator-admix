@@ -4,7 +4,7 @@
   "dependencies": {
     "framework7": "0.9.7",
     "seajs": "~2.3.0",
-    "zepto": "~1.1.6"
+    "zepto": "git@github.com:madrobby/zepto.git"
   }<% if (appPath) { %>,
   "appPath": "<%= appPath %>"<% } %>
 }

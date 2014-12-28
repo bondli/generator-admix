@@ -206,7 +206,11 @@ module.exports = function (grunt) {
         },
         files: {
           '.tmp/admix.js': [
-            '<%%= yeoman.app %>/bower_components/zepto/zepto.js',
+            '<%%= yeoman.app %>/bower_components/zepto/src/zepto.js',
+            '<%%= yeoman.app %>/bower_components/zepto/src/selector.js',
+            '<%%= yeoman.app %>/bower_components/zepto/src/event.js',
+            '<%%= yeoman.app %>/bower_components/zepto/src/touch.js',
+            '<%%= yeoman.app %>/bower_components/zepto/src/fx.js',
             '<%%= yeoman.app %>/bower_components/seajs/dist/sea-debug.js'
           ]
         }

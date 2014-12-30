@@ -54,5 +54,10 @@
     {
       "type": "BSD"
     }
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/bondli/generator-admix/issues"
+  },
+  "homepage": "https://github.com/bondli/generator-admix",
+  "license": "MIT"
 }

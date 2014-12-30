@@ -200,18 +200,28 @@ module.exports = function (grunt) {
         }]
       },
       //库文件合并 This is the same as grunt-contrib-concat
+      zepto: {
+        options: {
+          noncmd: true
+        },
+        files: {
+          '.tmp/script1/zepto.js': [
+            '<%= yeoman.app %>/bower_components/zepto/src/zepto.js',
+            '<%= yeoman.app %>/bower_components/zepto/src/selector.js',
+            '<%= yeoman.app %>/bower_components/zepto/src/event.js',
+            '<%= yeoman.app %>/bower_components/zepto/src/touch.js',
+            '<%= yeoman.app %>/bower_components/zepto/src/fx.js'
+          ]
+        }
+      },
       jslib: {
         options: {
           noncmd: true
         },
         files: {
-          '.tmp/admix.js': [
-            '<%%= yeoman.app %>/bower_components/zepto/src/zepto.js',
-            '<%%= yeoman.app %>/bower_components/zepto/src/selector.js',
-            '<%%= yeoman.app %>/bower_components/zepto/src/event.js',
-            '<%%= yeoman.app %>/bower_components/zepto/src/touch.js',
-            '<%%= yeoman.app %>/bower_components/zepto/src/fx.js',
-            '<%%= yeoman.app %>/bower_components/seajs/dist/sea-debug.js'
+          '<%= yeoman.dist %>/admix.js': [
+            '.tmp/script2/zepto.js',
+            '<%= yeoman.app %>/bower_components/seajs/dist/sea.js'
           ]
         }
       }
@@ -232,9 +242,9 @@ module.exports = function (grunt) {
           }
         ]
       },
-      jslib: {
-        src : '.tmp/admix.js',
-        dest: '<%%= yeoman.dist %>/admix.js'
+      zepto: {
+        src : '.tmp/script1/zepto.js',
+        dest: '.tmp/script2/zepto.js'
       }
     },
 
@@ -331,8 +341,10 @@ module.exports = function (grunt) {
     'concurrent:dist',
     'cssmin',
     'transport',
-    'concat',
+    'concat:js',
+    'concat:zepto',
     'uglify',
+    'concat:jslib',
     'usemin',
     'replace:cdnpath',
     'replace:jspath'

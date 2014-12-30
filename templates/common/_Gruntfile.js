@@ -17,7 +17,7 @@ module.exports = function (grunt) {
     cdnPrefix: 'http://g.tbcdn.cn/',
     group: 'o2o',
     appName: '<%= appname %>',
-    version: gitVersion.substring(gitVersion.lastIndexOf('/')+1),
+    version: gitVersion.substring(gitVersion.lastIndexOf('/')+1).replace(/^\s+|\s+$/g, ''),
     app: require('./bower.json').appPath || 'app',
     dist: 'build'
   };
@@ -178,7 +178,7 @@ module.exports = function (grunt) {
           src: [
             'pages/**/*.js',
             'mods/**/*.js',
-            'bower_components/admix-ui/**/*.js'],
+            'bower_components/admix-ui/build/**/*.js'],
           dest: '.tmp/script1/'
         }]
       }

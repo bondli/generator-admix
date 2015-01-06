@@ -206,11 +206,11 @@ module.exports = function (grunt) {
         },
         files: {
           '.tmp/script1/zepto.js': [
-            '<%= yeoman.app %>/bower_components/zepto/src/zepto.js',
-            '<%= yeoman.app %>/bower_components/zepto/src/selector.js',
-            '<%= yeoman.app %>/bower_components/zepto/src/event.js',
-            '<%= yeoman.app %>/bower_components/zepto/src/touch.js',
-            '<%= yeoman.app %>/bower_components/zepto/src/fx.js'
+            '<%%= yeoman.app %>/bower_components/zepto/src/zepto.js',
+            '<%%= yeoman.app %>/bower_components/zepto/src/selector.js',
+            '<%%= yeoman.app %>/bower_components/zepto/src/event.js',
+            '<%%= yeoman.app %>/bower_components/zepto/src/touch.js',
+            '<%%= yeoman.app %>/bower_components/zepto/src/fx.js'
           ]
         }
       },
@@ -219,9 +219,9 @@ module.exports = function (grunt) {
           noncmd: true
         },
         files: {
-          '<%= yeoman.dist %>/admix.js': [
+          '<%%= yeoman.dist %>/admix.js': [
             '.tmp/script2/zepto.js',
-            '<%= yeoman.app %>/bower_components/seajs/dist/sea.js'
+            '<%%= yeoman.app %>/bower_components/seajs/dist/sea.js'
           ]
         }
       }

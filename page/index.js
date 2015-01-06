@@ -6,7 +6,7 @@ var utils = require('../util.js');
 
 var Generator = module.exports = function Generator() {
   ScriptBase.apply(this, arguments);
-  this.pageName = (this.classedName).toLowerCase();
+  this.pageName = (this.name).toLowerCase();
 };
 
 util.inherits(Generator, ScriptBase);

@@ -12,7 +12,7 @@ var Generator = module.exports = function Generator(args, options) {
   yeoman.generators.Base.apply(this, arguments);
   this.argument('appname', { type: String, required: false });
   this.appname = this.appname || path.basename(process.cwd());
-  this.appname = this._.camelize(this._.slugify(this._.humanize(this.appname)));
+  //this.appname = this._.camelize(this._.slugify(this._.humanize(this.appname)));
 
   this.option('app-suffix', {
     desc: 'Allow a custom suffix to be added to the module name',

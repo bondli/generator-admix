@@ -1,5 +1,5 @@
 {
-  "name": "<%= _.slugify(_.humanize(appname)) %>",
+  "name": "<%= appname %>",
   "version": "0.0.0",
   "dependencies": {
     "framework7": "0.9.7",

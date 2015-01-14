@@ -33,7 +33,7 @@
     <script>
     var basePath = 'o2o/<%= appname%>/{version}/',
         l = window.location,
-        debug = ~l.href.indexOf('debug') || l.hostname === 'localhost';
+        debug = ~l.href.indexOf('debug') || l.port === '9000';
 
     if (~l.hostname.indexOf('m.taobao.com')) { //online
         basePath = 'http://g.tbcdn.cn/' + basePath;

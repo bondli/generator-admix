@@ -291,6 +291,17 @@ module.exports = function (grunt) {
           }
         }]
       },
+      //fix zepto touch event at android 4.4
+      touch : {
+        src: ['.tmp/script1/zepto.js'],
+        overwrite: true,
+        replacements: [{
+          from: 'deltaY += Math.abs(touch.y1 - touch.y2)',
+          to: function(){
+            return 'deltaY += Math.abs(touch.y1 - touch.y2); if (touch.x2 && Math.abs(touch.x1 - touch.x2) > 10){e.preventDefault();}';
+          }
+        }]
+      },
       jspath:{
         src: ['<%%= yeoman.dist %>/{,*/}*.js'],
         overwrite: true,
@@ -346,6 +357,7 @@ module.exports = function (grunt) {
     'transport',
     'concat:js',
     'concat:zepto',
+    'replace:touch',
     'uglify',
     'concat:jslib',
     'usemin',

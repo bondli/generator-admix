@@ -9,7 +9,7 @@ sudo npm install -g bower
 
 ### 初始化项目后要做的事情
 * bower install
-* npm install (为了避免报错，请先修改.npm目录的权限：sudo chmod -R 777 /User/用户名/.npm/)
+* npm install (为了避免报错，请先修改.npm目录的权限：sudo chmod -R 777 /Users/用户名/.npm/)
 
 ### 开发流程
 

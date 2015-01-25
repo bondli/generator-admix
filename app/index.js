@@ -89,6 +89,9 @@ Generator.prototype.packageFiles = function packageFiles() {
   fs.mkdir('app/pages');
 
   fs.mkdir('app/mods');
+
+  this.template('common.less', 'app/mods/common.less');
+
 };
 
 Generator.prototype.showGuidance = function showGuidance() {

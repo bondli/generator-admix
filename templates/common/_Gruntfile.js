@@ -98,7 +98,11 @@ module.exports = function (grunt) {
             return [
               connect().use(
                 '/htmls',
-                connect.static('./htmls-dist') //组件页面到访问路径
+                connect.static('./htmls-dist') //组件页面加载到访问路径
+              ),
+              connect().use(
+                '/pages',
+                connect.static(appConfig.dist) //JS加载到访问路径
               ),
               connect.static(appConfig.dist)
             ];
@@ -298,7 +302,7 @@ module.exports = function (grunt) {
         replacements: [{
           from: 'deltaY += Math.abs(touch.y1 - touch.y2)',
           to: function(){
-            return 'deltaY += Math.abs(touch.y1 - touch.y2); if (touch.x2 && Math.abs(touch.x1 - touch.x2) > 10){e.preventDefault();}';
+            return 'deltaY += Math.abs(touch.y1 - touch.y2); if (window.navigator.userAgent.indexOf("Android")>-1 && touch.x2 && Math.abs(touch.x1 - touch.x2) > 10){e.preventDefault();}';
           }
         }]
       },

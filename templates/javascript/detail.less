@@ -1,0 +1,91 @@
+@import "../../bower_components/framework7/src/less/mixins";
+@import "../../bower_components/framework7/src/less/intro";
+@import "../../bower_components/framework7/src/less/toolbars";
+@import "../../bower_components/framework7/src/less/toolbars-pages";
+
+@import "../../bower_components/framework7/src/less/content-block";
+@import "../../bower_components/framework7/src/less/lists";
+@import "../../bower_components/framework7/src/less/grid";
+
+@import "../../bower_components/admix-ui/build/loading/loading";
+@import "../../bower_components/admix-ui/build/toast/toast";
+@import "../../bower_components/admix-ui/build/tips/tips";
+
+@import "../../mods/common";
+
+.content {
+    margin-bottom: 50px;
+}
+
+.list-block, .content-block{
+    margin: 10px 0;
+
+    &.mt0 {
+        margin-top: 0;
+    }
+
+    .item-title.label {
+        width: 30%;
+        color: @labelColor;
+        text-align: right;
+    }
+
+    .item-label {
+        min-height: 34px;
+        .item-inner {
+            border-bottom: 0;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            min-height: 34px;
+        }
+        .label {
+            color: @labelColor;
+        }
+    }
+}
+
+.status {
+    color: #fff;
+    background: #515160;
+
+    i {
+        display: inline-block;
+        float: left;
+        margin-top: 3px;
+    }
+    .icon-infofill:before{
+        content:"\e611"
+    }
+    .status-title, .status-desc {
+        margin: 0;
+        padding-left: 20px;
+        height: 30px;
+        line-height: 30px;
+    }
+    .status-title {
+        font-size: 16px;
+    }
+    .status-desc {
+        color: #fff;
+        height: auto;
+    }
+}
+
+.content-block .content-block-inner.status {
+    border-top: 1px solid #515160;
+}
+
+#actions {
+    display: none;
+    height: 44px;
+
+    .col-33 {
+        text-align: center;
+        padding: 8px 0;
+        line-height: 30px;
+
+        a {
+            display: inherit;
+        }
+    }
+}

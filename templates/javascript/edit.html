@@ -40,6 +40,9 @@
     else if (~l.hostname.indexOf('waptest.taobao.com')) { //daily
         basePath = '//g.assets.daily.taobao.net/' + basePath;
     }
+    else if (~l.hostname.indexOf('wapa.taobao.com')) { //yufa
+        basePath = 'http://g.assets.daily.taobao.net/' + basePath;
+    }
     if (debug) {
         basePath = '//localhost:9000/pages/';
     }

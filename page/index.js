@@ -6,6 +6,7 @@ var utils = require('../util.js');
 
 var Generator = module.exports = function Generator() {
   ScriptBase.apply(this, arguments);
+  this.name = (this.name).replace('.html','');
   this.pageName = (this.name).toLowerCase();
 };
 
@@ -13,11 +14,13 @@ util.inherits(Generator, ScriptBase);
 
 Generator.prototype.createPageFiles = function createPageFiles() {
   
+  this.name = (this.name).replace('.html','');
+  
   var htmlFile = 'page.html',
     jsFile = 'page.js',
     lessFile = 'page.less',
 
-    tmpName = this.name.toLowerCase();
+    tmpName = (this.name).toLowerCase();
 
   if(tmpName.indexOf('list') > -1){ //list
     htmlFile = 'list.html';

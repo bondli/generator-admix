@@ -55,7 +55,10 @@ module.exports = function (grunt) {
         }
       },
       less: {
-        files: ['<%%= yeoman.app %>/pages/{,*/}*.less'],
+        files: [
+          '<%%= yeoman.app %>/pages/{,*/}*.less',
+          '<%%= yeoman.app %>/mods/{,*/}*.less'
+        ],
         tasks: ['less:server'],
         options: {
           livereload: '<%%= connect.options.livereload %>'
@@ -79,7 +82,7 @@ module.exports = function (grunt) {
       options: {
         port: 9000,
         // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost',
+        hostname: 'local.waptest.taobao.com',
         livereload: 35729
       },
       livereload: {
@@ -389,6 +392,14 @@ module.exports = function (grunt) {
     concurrent: {
       server: ['less:server'],
       dist: ['less:dist']
+    },
+
+    // generator index.html
+    genindex : {
+      options: {
+        'target': '.tmp'
+      },
+      files: ['./htmls/*.html']
     }
 
   });
@@ -397,6 +408,7 @@ module.exports = function (grunt) {
   grunt.registerTask('serve', [
     'clean:server',
     'concurrent:server',
+    'genindex',
     'connect:livereload',
     'watch'
   ]);

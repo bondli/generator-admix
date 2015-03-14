@@ -53,10 +53,60 @@
 
 <body>
 
-<div class="page-content">
-    
+<!-- no data -->
+<div id="nodata">
+    <i class="iconfont icon-nodata"></i>
+    <div>该记录可能已被删除</div>
 </div>
 
+<!-- datainfo -->
+<div id="datainfo" class="content"></div>
+
+<!-- toolbar actions -->
+<div id="actions" class="toolbar"></div>
+
+<script id="datainfoTpl" type="text/tmpl">
+
+<!-- status -->
+<div class="content-block mt0">
+    <div class="content-block-inner status">
+        <i class="iconfont icon-infofill"></i>
+        <h3 class="status-title">未投放</h3>
+        <p class="status-desc">投放后，消费者才可查看该数据</p>
+    </div>
+</div>
+
+<!-- base info -->
+<div class="list-block">
+    <ul>
+        <li class="item-content">
+            <div class="item-inner">
+                <div class="item-title">基本信息</div>
+            </div>
+        </li>
+        <li class="item-content item-label">
+            <div class="item-inner">
+                <div class="item-title label">名称：</div>
+                <div class="item-input">活动名称，优惠券名称</div>
+            </div>
+        </li>
+        <li class="item-content item-label">
+            <div class="item-inner">
+                <div class="item-title label">有效期：</div>
+                <div class="item-input">2015.12.31 00:12:00 - 2015.12.31 00:22:00</div>
+            </div>
+        </li>
+    </ul>
+</div>
+</script>
+
+<script id="actionsTpl" type="text/tmpl">
+<div class="toolbar-inner row">
+    <div class="col-33 act-publish disabled">投放</div>
+    <div class="col-33 act-edit disabled"><a href="edit.html?id=1">编辑</a></div>
+    <div class="col-33 act-del"><a href="javascript:;" _val="1" class="delete">删除</a></div>
+</div>
+</script>
 <!-- 加载脚本 -->
 <script>
     g_mstart = new Date();

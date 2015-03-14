@@ -53,8 +53,60 @@
 
 <body>
 
-<div class="page-content">
-    
+<div class="list-block mt0">
+    <ul>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-input">
+                        <input id="title" type="text" placeholder="填写标题（最多15个字）">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-input">
+                        <textarea id="desc" type="text" placeholder="填写描述（描述规则或要求，最多1000字）"></textarea>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="list-block mb60">
+    <ul>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">开始时间</div>
+                    <div class="item-input">
+                        <input id="startTime" type="datetime-local" placeholder="开始时间">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="item-content">
+                <div class="item-inner">
+                    <div class="item-title label">结束时间</div>
+                    <div class="item-input">
+                        <input id="endTime" type="datetime-local" placeholder="结束时间">
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="toolbar">
+    <div class="toolbar-inner">
+        <a id="save" href="javascript:;" class="button button-big">
+            提交
+        </a>
+    </div>
 </div>
 
 <!-- 加载脚本 -->

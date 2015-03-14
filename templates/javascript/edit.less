@@ -1,0 +1,46 @@
+@import "../../bower_components/framework7/src/less/mixins";
+@import "../../bower_components/framework7/src/less/intro";
+
+@import "../../bower_components/framework7/src/less/toolbars";
+@import "../../bower_components/framework7/src/less/toolbars-pages";
+
+@import "../../bower_components/framework7/src/less/content-block";
+@import "../../bower_components/framework7/src/less/lists";
+@import "../../bower_components/framework7/src/less/grid";
+@import "../../bower_components/framework7/src/less/forms";
+
+@import "../../bower_components/admix-ui/build/loading/loading";
+@import "../../bower_components/admix-ui/build/toast/toast";
+@import "../../bower_components/admix-ui/build/tips/tips";
+
+@import "../../mods/common";
+
+.list-block {
+    &.mt0 {
+        margin-top: 0;
+    }
+    &.mb60 {
+        margin-bottom: 60px;
+    }
+    margin: 10px 0;
+
+    .item-title.label {
+        width: 25%;
+        color: @labelColor;
+    }
+}
+
+#save {
+    border: 1px solid @btnColor;
+    background: @btnColor;
+    color: #fff;
+    display: block;
+    width: 100%;
+    font-size: 18px;
+    height: 44px;
+    line-height: 44px;
+}
+#save:active {
+    background: @btnPressColor;
+    color: #fff;
+}

@@ -4,7 +4,8 @@
   "dependencies": {
     "framework7": "0.9.7",
     "seajs": "~2.3.0",
-    "zepto": "http://github.com/madrobby/zepto.git"
+    "zepto": "http://github.com/madrobby/zepto.git",
+    "admix-ui": "git@gitlab.alibaba-inc.com:hongbang.lhb/admix-ui.git#daily/0.0.1"
   }<% if (appPath) { %>,
   "appPath": "<%= appPath %>"<% } %>
 }

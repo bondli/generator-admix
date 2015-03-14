@@ -14,12 +14,22 @@ module.exports = function (grunt) {
 
   // Configurable paths for the application
   var appConfig = {
-    cdnPrefix: 'http://g.tbcdn.cn/',
+    cdnPrefix: '//g.alicdn.com/',
     group: 'o2o',
     appName: '<%= appname %>',
     version: gitVersion.substring(gitVersion.lastIndexOf('/')+1).replace(/^\s+|\s+$/g, ''),
     app: require('./bower.json').appPath || 'app',
-    dist: 'build'
+    dist: 'build',
+
+    publishFiles: '*.html',
+    awpConfig: {
+      group: 'o2o',
+      appName: '<%= appname %>',
+      version: gitVersion.substring(gitVersion.lastIndexOf('/')+1).replace(/^\s+|\s+$/g, ''),
+      dWebappId: 567,
+      oWebappId: 251,
+      oWebappDir: ''
+    }
   };
 
   // Define the configuration for all the tasks
@@ -326,6 +336,55 @@ module.exports = function (grunt) {
       }
     },
 
+    //publish htmls to awp
+    awp: {
+      daily: {
+        options: {
+          awpConfig: appConfig.awpConfig,
+          env: 'daily'
+        },
+        files: [{
+          src: './htmls-dist/*.html',
+          filter: function(filepath) {
+            if(appConfig.publishFiles != '*.html'){
+              return 'htmls-dist/' + appConfig.publishFiles == filepath;
+            }
+            return filepath;
+          }
+        }]
+      },
+      prepub: {
+        options: {
+          awpConfig: appConfig.awpConfig,
+          env: 'prepub'
+        },
+        files: [{
+          src: './htmls-dist/*.html',
+          filter: function(filepath) {
+            if(appConfig.publishFiles != '*.html'){
+              return 'htmls-dist/' + appConfig.publishFiles == filepath;
+            }
+            return filepath;
+          }
+        }]
+      },
+      online: {
+        options: {
+          awpConfig: appConfig.awpConfig,
+          env: 'online'
+        },
+        files: [{
+          src: './htmls-dist/*.html',
+          filter: function(filepath) {
+            if(appConfig.publishFiles != '*.html'){
+              return 'htmls-dist/' + appConfig.publishFiles == filepath;
+            }
+            return filepath;
+          }
+        }]
+      }
+    },
+
     // Run some tasks in parallel to speed up the build process
     concurrent: {
       server: ['less:server'],
@@ -335,23 +394,12 @@ module.exports = function (grunt) {
   });
 
 
-  grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
-    if (target === 'dist') {
-      return grunt.task.run(['build', 'connect:dist:keepalive']);
-    }
-
-    if (target === 'daily') {
-      appConfig.cdnPrefix = 'http://g.assets.daily.taobao.net/';
-      return grunt.task.run(['build', 'connect:dist:keepalive']);
-    }
-
-    grunt.task.run([
-      'clean:server',
-      'concurrent:server',
-      'connect:livereload',
-      'watch'
-    ]);
-  });
+  grunt.registerTask('serve', [
+    'clean:server',
+    'concurrent:server',
+    'connect:livereload',
+    'watch'
+  ]);
 
   grunt.registerTask('build', [
     'clean:dist',
@@ -368,6 +416,26 @@ module.exports = function (grunt) {
     'replace:cdnpath',
     'replace:jspath'
   ]);
+
+  grunt.registerTask('publish', 'publish htmls to awp', function (target, files) {
+    if (files) {
+      appConfig.publishFiles = files;
+    }
+
+    if (target === 'p') { //预发
+      appConfig.cdnPrefix = '//g.assets.daily.taobao.net/';
+      return grunt.task.run(['build', 'awp:prepub']);
+    }
+    else if (target === 'o') { //线上
+      appConfig.cdnPrefix = '//g.alicdn.com/';
+      return grunt.task.run(['build', 'awp:online']);
+    }
+    else { //日常
+      appConfig.cdnPrefix = '//g.assets.daily.taobao.net/';
+      return grunt.task.run(['build', 'awp:daily']);
+    }
+
+  });
 
   grunt.registerTask('default', [
     'newer:jshint',

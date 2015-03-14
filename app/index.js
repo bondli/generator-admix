@@ -91,6 +91,7 @@ Generator.prototype.packageFiles = function packageFiles() {
   fs.mkdir('app/mods');
 
   this.template('common.less', 'app/mods/common.less');
+  this.template('apimap.js', 'app/mods/apimap.js');
 
 };
 

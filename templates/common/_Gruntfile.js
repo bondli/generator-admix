@@ -109,6 +109,7 @@ module.exports = function (grunt) {
           open: true,
           middleware: function (connect) {
             return [
+              connect.static('.tmp'), //索引文件加载到访问路径
               connect().use(
                 '/htmls',
                 connect.static('./htmls-dist') //组件页面加载到访问路径
@@ -161,6 +162,12 @@ module.exports = function (grunt) {
         cwd: './htmls',
         dest: './htmls-dist',
         src: '*.html'
+      },
+      jslib: {
+        expand: true,
+        cwd: '<%%= yeoman.app %>/bower_components/admix/dist/',
+        dest: '<%%= yeoman.dist %>',
+        src: '*.js'
       }
     },
 
@@ -218,39 +225,13 @@ module.exports = function (grunt) {
           },
           dest: '.tmp/script2/'
         }]
-      },
-      //库文件合并 This is the same as grunt-contrib-concat
-      zepto: {
-        options: {
-          noncmd: true
-        },
-        files: {
-          '.tmp/script1/zepto.js': [
-            '<%%= yeoman.app %>/bower_components/zepto/src/zepto.js',
-            '<%%= yeoman.app %>/bower_components/zepto/src/selector.js',
-            '<%%= yeoman.app %>/bower_components/zepto/src/event.js',
-            '<%%= yeoman.app %>/bower_components/zepto/src/touch.js',
-            '<%%= yeoman.app %>/bower_components/zepto/src/fx.js'
-          ]
-        }
-      },
-      jslib: {
-        options: {
-          noncmd: true
-        },
-        files: {
-          '<%%= yeoman.dist %>/admix.js': [
-            '.tmp/script2/zepto.js',
-            '<%%= yeoman.app %>/bower_components/seajs/dist/sea.js'
-          ]
-        }
       }
     },
 
     //js 压缩
     uglify: {
       options: {
-        mangle: true
+        mangle: false
       },
       js: {
         files: [
@@ -261,10 +242,6 @@ module.exports = function (grunt) {
             dest: '<%%= yeoman.dist %>/'
           }
         ]
-      },
-      zepto: {
-        src : '.tmp/script1/zepto.js',
-        dest: '.tmp/script2/zepto.js'
       }
     },
 
@@ -305,17 +282,6 @@ module.exports = function (grunt) {
           from: '{version}',
           to: function(){
             return appConfig.version;
-          }
-        }]
-      },
-      //fix zepto touch event at android 4.4
-      touch : {
-        src: ['.tmp/script1/zepto.js'],
-        overwrite: true,
-        replacements: [{
-          from: 'deltaY += Math.abs(touch.y1 - touch.y2)',
-          to: function(){
-            return 'deltaY += Math.abs(touch.y1 - touch.y2); if (window.navigator.userAgent.indexOf("Android")>-1 && touch.x2 && Math.abs(touch.x1 - touch.x2) > 10){e.preventDefault();}';
           }
         }]
       },
@@ -413,6 +379,11 @@ module.exports = function (grunt) {
     'watch'
   ]);
 
+  grunt.registerTask('daily', 'Compile then start a connect web server', function (target) {
+    appConfig.cdnPrefix = '//g.assets.daily.taobao.net/';
+    return grunt.task.run(['build', 'genindex', 'connect:dist:keepalive']);
+  });
+
   grunt.registerTask('build', [
     'clean:dist',
     'copy:pages',
@@ -420,11 +391,9 @@ module.exports = function (grunt) {
     'cssmin',
     'transport',
     'concat:js',
-    'concat:zepto',
-    'replace:touch',
     'uglify',
-    'concat:jslib',
     'usemin',
+    'copy:jslib',
     'replace:cdnpath',
     'replace:jspath'
   ]);
@@ -449,8 +418,5 @@ module.exports = function (grunt) {
 
   });
 
-  grunt.registerTask('default', [
-    'newer:jshint',
-    'serve'
-  ]);
+  grunt.registerTask('default', ['serve']);
 };

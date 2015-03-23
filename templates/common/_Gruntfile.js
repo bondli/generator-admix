@@ -380,7 +380,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('daily', 'Compile then start a connect web server', function (target) {
-    appConfig.cdnPrefix = '//g.assets.daily.taobao.net/';
+    appConfig.cdnPrefix = '//g-assets.daily.taobao.net/';
     return grunt.task.run(['build', 'genindex', 'connect:dist:keepalive']);
   });
 
@@ -404,7 +404,7 @@ module.exports = function (grunt) {
     }
 
     if (target === 'p') { //预发
-      appConfig.cdnPrefix = '//g.assets.daily.taobao.net/';
+      appConfig.cdnPrefix = '//g-assets.daily.taobao.net/';
       return grunt.task.run(['build', 'awp:prepub']);
     }
     else if (target === 'o') { //线上
@@ -412,7 +412,7 @@ module.exports = function (grunt) {
       return grunt.task.run(['build', 'awp:online']);
     }
     else { //日常
-      appConfig.cdnPrefix = '//g.assets.daily.taobao.net/';
+      appConfig.cdnPrefix = '//g-assets.daily.taobao.net/';
       return grunt.task.run(['build', 'awp:daily']);
     }
 

@@ -50,7 +50,12 @@ define(function(require, exports, module) {
                 base.setDocTitle('修改');
                 isEdit = true;
 
-                this.getData();
+                if(typeof(window.renderByNode)==='undefined' || window.renderByNode===false) {
+                    this.getData();
+                }
+                else{
+                    loading.hide();
+                }
             }
             else {
                 ui.$startTime.val( datetime.formatDate('yyyy-MM-ddTHH:mm', next1hour) );
@@ -91,7 +96,7 @@ define(function(require, exports, module) {
          * 字段显示控制
          */
         setFields : function () {
-            
+
         },
 
         /**

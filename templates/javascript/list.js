@@ -39,9 +39,11 @@ define(function(require, exports, module) {
          * @return {[type]} [description]
          */
         init : function () {
-            loading.show();
 
-            this.getData();
+            if(typeof(window.renderByNode)==='undefined' || window.renderByNode===false) {
+                loading.show();
+                this.getData();
+            }
 
             this.initEvent();
 
@@ -225,7 +227,7 @@ define(function(require, exports, module) {
                         if(curPage === 1){
                             self.setNoData(true);
                         }
-                        
+
                     }
                 },
                 function (resJson, retType) {

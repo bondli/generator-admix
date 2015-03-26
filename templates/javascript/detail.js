@@ -37,7 +37,9 @@ define(function(require, exports, module) {
          * @return {[type]} [description]
          */
         init : function () {
-            this.getData();
+            if(typeof(window.renderByNode)==='undefined' || window.renderByNode===false) {
+                this.getData();
+            }
             this.initEvent();
 
         },

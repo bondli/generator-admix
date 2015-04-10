@@ -64,6 +64,13 @@ module.exports = function (grunt) {
           livereload: '<%%= connect.options.livereload %>'
         }
       },
+      jst: {
+        files: ['<%%= yeoman.app %>/pages/{,*/}*.jst.html'],
+        tasks: ['underscore_jst'],
+        options: {
+          livereload: '<%%= connect.options.livereload %>'
+        }
+      },
       gruntfile: {
         files: ['Gruntfile.js']
       },
@@ -196,6 +203,29 @@ module.exports = function (grunt) {
       }
     },
 
+    //jst模版编译
+    underscore_jst: {
+      main: {
+        options: {
+          outputSettings: {
+            style: 'amd'
+          }
+        },
+        files: [
+          {
+            expand: true,
+            cwd: '<%%= yeoman.app %>/',
+            src: [
+              'pages/**/tpls/*.jst.html',
+              'pages/**/tpls/*.jst'
+            ],
+            ext: '.jst.js',
+            dest: '<%%= yeoman.app %>/'
+          },
+        ]
+      }
+    },
+
     //seajs模块打包合并
     transport: {
       pagejs: {
@@ -204,6 +234,7 @@ module.exports = function (grunt) {
           cwd: '<%%= yeoman.app %>/',
           src: [
             'pages/**/*.js',
+            'pages/**/tpls/*.js',
             'mods/**/*.js',
             'bower_components/admix-ui/build/**/*.js'],
           dest: '.tmp/script1/'
@@ -275,7 +306,7 @@ module.exports = function (grunt) {
 
     // replace seajs config path
     replace: {
-      cdnpath:{
+      cdnpath: {
         src: ['./htmls-dist/{,*/}*.html'],
         overwrite: true,
         replacements: [{
@@ -285,23 +316,32 @@ module.exports = function (grunt) {
           }
         }]
       },
-      jspath:{
+      jspath: {
         src: ['<%%= yeoman.dist %>/{,*/}*.js'],
         overwrite: true,
-        replacements: [{
-          from: '../../',
-          to: ''
-        },{
-          from: 'pages/',
-          to: ''
-        },{
-          from: './mods',
-          to: function(matchedWord, index, fullText, regexMatches){
-            var p = fullText.indexOf('/'),
-                t = fullText.substring(8, p);
-            return t + '/mods';
-          }
-        }]
+        replacements: [
+            {
+              from: '../../',
+              to: ''
+            },{
+              from: 'pages/',
+              to: ''
+            },{
+              from: './mods',
+              to: function(matchedWord, index, fullText, regexMatches){
+                var p = fullText.indexOf('/'),
+                    t = fullText.substring(8, p);
+                return t + '/mods';
+              }
+            },{
+              from: './tpls',
+              to: function(matchedWord, index, fullText, regexMatches){
+                var p = fullText.indexOf('/'),
+                    t = fullText.substring(8, p);
+                return t + '/tpls';
+              }
+            }
+        ]
       }
     },
 
@@ -375,6 +415,7 @@ module.exports = function (grunt) {
     'clean:server',
     'concurrent:server',
     'genindex',
+    'underscore_jst',
     'connect:livereload',
     'watch'
   ]);
@@ -389,6 +430,7 @@ module.exports = function (grunt) {
     'copy:pages',
     'concurrent:dist',
     'cssmin',
+    'underscore_jst',
     'transport',
     'concat:js',
     'uglify',
@@ -405,15 +447,15 @@ module.exports = function (grunt) {
 
     if (target === 'p') { //预发
       appConfig.cdnPrefix = '//g-assets.daily.taobao.net/';
-      return grunt.task.run(['build', 'awp:prepub']);
+      return grunt.task.run(['copy:pages', 'usemin', 'replace:cdnpath', 'awp:prepub']);
     }
     else if (target === 'o') { //线上
       appConfig.cdnPrefix = '//g.alicdn.com/';
-      return grunt.task.run(['build', 'awp:online']);
+      return grunt.task.run(['copy:pages', 'usemin', 'replace:cdnpath', 'awp:online']);
     }
     else { //日常
       appConfig.cdnPrefix = '//g-assets.daily.taobao.net/';
-      return grunt.task.run(['build', 'awp:daily']);
+      return grunt.task.run(['copy:pages', 'usemin', 'replace:cdnpath', 'awp:daily']);
     }
 
   });

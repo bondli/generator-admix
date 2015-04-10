@@ -13,9 +13,9 @@ var Generator = module.exports = function Generator() {
 util.inherits(Generator, ScriptBase);
 
 Generator.prototype.createPageFiles = function createPageFiles() {
-  
+
   this.name = (this.name).replace('.html','');
-  
+
   var htmlFile = 'page.html',
     jsFile = 'page.js',
     lessFile = 'page.less',
@@ -52,6 +52,12 @@ Generator.prototype.createPageFiles = function createPageFiles() {
   this.appTemplate(
     lessFile,
     path.join('pages', this.name, 'index.less')
+  );
+
+  //增加模版文件
+  this.appTemplate(
+    'jst.html',
+    path.join('pages', this.name, 'tpls', 'index.jst.html')
   );
 };
 

@@ -65,7 +65,10 @@ module.exports = function (grunt) {
         }
       },
       jst: {
-        files: ['<%%= yeoman.app %>/pages/{,*/}*.jst.html'],
+        files: [
+          '<%%= yeoman.app %>/pages/**/*.jst.html',
+          '<%%= yeoman.app %>/mods/**/*.jst.html'
+        ],
         tasks: ['underscore_jst'],
         options: {
           livereload: '<%%= connect.options.livereload %>'
@@ -216,8 +219,9 @@ module.exports = function (grunt) {
             expand: true,
             cwd: '<%%= yeoman.app %>/',
             src: [
-              'pages/**/tpls/*.jst.html',
-              'pages/**/tpls/*.jst'
+              'pages/**/*.jst.html',
+              'pages/**/*.jst',
+              'mods/**/*.jst.html',
             ],
             ext: '.jst.js',
             dest: '<%%= yeoman.app %>/'

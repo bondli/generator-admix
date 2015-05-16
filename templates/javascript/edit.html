@@ -3,6 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <link rel="dns-prefetch" href="//g.alicdn.com">
+    <link rel="dns-prefetch" href="//at.alicdn.com">
+    <link rel="dns-prefetch" href="//img.alicdn.com">
+    <link rel="dns-prefetch" href="//api.m.taobao.com">
+    <link rel="dns-prefetch" href="//cdn.mmstat.com">
+    <link rel="dns-prefetch" href="//log.mmstat.com">
     <meta content="yes" name="apple-mobile-web-app-capable" />
     <meta content="yes" name="apple-touch-fullscreen" />
     <meta content="telephone=no,email=no" name="format-detection" />
@@ -93,28 +98,25 @@ var basePath = 'o2o/<%= appname%>/{version}/',
     l = window.location,
     debug = ~l.href.indexOf('debug') || l.port === '9000';
 
-if (~l.hostname.indexOf('m.taobao.com')) { //online
+if (~l.hostname.indexOf('waptest.taobao.com') ||
+    ~l.hostname.indexOf('daily.taobao.net')) {      //daily
+    basePath = '//g-assets.daily'+''+'.taobao.net/' + basePath;
+}
+else if (~l.hostname.indexOf('wapa.taobao.com')) {  //yufa
+    basePath = '//g-assets.daily'+''+'.taobao.net/' + basePath;
+}
+else  {                                             //online
     basePath = '//g.alicdn.com/' + basePath;
-}
-else if (~l.hostname.indexOf('waptest.taobao.com')) { //daily
-    basePath = '//g-assets.daily'+''+'.taobao.net/' + basePath;
-}
-else if (~l.hostname.indexOf('wapa.taobao.com')) { //yufa
-    basePath = '//g-assets.daily'+''+'.taobao.net/' + basePath;
 }
 if (debug) {
     basePath = '//localhost:9000/pages/';
 }
 seajs.config({base: basePath});
+
+// 加载脚本
+g_mstart = new Date();
+seajs.use('<%= pageName%>/index');
 </script>
 
-<!-- 加载脚本 -->
-<script>
-    g_mstart = new Date();
-    seajs.use('<%= pageName%>/index');
-</script>
-
-<script src="//g.alicdn.com/tb/tracker/1.0.14/index.js"></script>
-<!--<script src="http://10.125.56.91:9999/target/target-script-min.js#youname"></script>-->
 </body>
 </html>

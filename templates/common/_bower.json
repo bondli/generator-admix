@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "dependencies": {
     "framework7": "0.9.7",
-    "admix": "http://github.com/bondli/admix.git",
-    "admix-ui": "git@gitlab.alibaba-inc.com:hongbang.lhb/admix-ui.git#daily/0.0.1"
+    "admix": "http://github.com/bondli/admix.git#0.0.2",
+    "admix-ui": "git@gitlab.alibaba-inc.com:hongbang.lhb/admix-ui.git#daily/0.0.2"
   }<% if (appPath) { %>,
   "appPath": "<%= appPath %>"<% } %>
 }

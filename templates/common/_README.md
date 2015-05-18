@@ -5,6 +5,7 @@
 sudo npm install -g yo
 sudo npm install -g grunt-cli
 sudo npm install -g bower
+sudo npm install -g generator-admix
 ```
 
 ### 初始化项目后要做的事情
@@ -34,7 +35,7 @@ grunt build
 
 ### 安装ui组件
 ```bash
-bower install git://github.com/bondli/admix-ui.git#daily/0.0.1
+bower install git://github.com/bondli/admix-ui.git#daily/0.0.2
 ```
 
 ### 交互规范

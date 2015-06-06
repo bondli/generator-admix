@@ -15,7 +15,7 @@ sudo npm install -g generator-admix
 ### 开发流程
 
 ```bash
-grunt serve
+grunt
 ```
 
 * 新增page：

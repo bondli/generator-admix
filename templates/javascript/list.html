@@ -42,33 +42,6 @@
 <!-- add button -->
 <a id="add" class="plus-btn iconfont" href="edit.html"></a>
 
-<script id="listTpl" type="text/tmpl">
-
-<!--% for (i = 0, l = list.length; i < l; i ++) { %-->
-    <li id="data-item-idneedreplace">
-        <a href="detail.html?id=idneedreplace" class="item-link item-content">
-            <div class="item-media">
-                <img src="imagesneedreplace_100x100.jpg" width="80">
-            </div>
-            <div class="item-inner">
-                <div class="item-title-row">
-                    <div class="item-title">name need replace</div>
-                </div>
-                <div class="item-text">
-                    有效期: 2015-10-11 ~ 2015-12-12
-                </div>
-            </div>
-        </a>
-        <div class="actions">
-            <span class="act-status">未投放</span>
-            <span class="act-publish disabled">投放</span>
-            <a class="act-edit edit" href="javascript:;" _val="idneedreplace">编辑</a>
-            <a class="act-del delete" href="javascript:;" _val="idneedreplace">删除</a>
-        </div>
-    </li>
-<!--% } %-->
-
-</script>
 
 <!-- build:js /admix.js -->
 <script src="/bower_components/admix/dist/admix.js"></script>
@@ -91,6 +64,7 @@ else if (~l.hostname.indexOf('wapa.taobao.com')) {  //yufa
 else  {                                             //online
     basePath = '//g.alicdn.com/' + basePath;
 }
+
 if (debug) {
     basePath = '//localhost:9000/pages/';
 }

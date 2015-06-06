@@ -12,12 +12,13 @@ define(function(require, exports, module) {
     var login = require('../../bower_components/admix-ui/build/login/login');
     var loading = require('../../bower_components/admix-ui/build/loading/loading');
     var toast = require('../../bower_components/admix-ui/build/toast/toast');
-    var stpl = require('../../bower_components/admix-ui/build/stpl/stpl');
+    var lazyload = require('../../bower_components/admix-ui/build/lazyload/lazyload');
     var modal = require('../../bower_components/admix-ui/build/modal/modal');
     var monitor = require('../../bower_components/admix-ui/build/scrollmonitor/scrollmonitor');
 
     //统一的接口api管理
     var apimap = require('../../mods/apimap');
+    var listTmpl = require('./tpls/index.jst');
 
     console.log('startAt:'+g_start.getTime()+', jslibloadedAt:'+g_mstart.getTime()+', jsloadedAt:'+new Date().getTime());
 
@@ -44,7 +45,12 @@ define(function(require, exports, module) {
                 loading.show();
                 this.getData();
             }
+            else{
+                totalItems = parseInt($('#dataCount').val(), 10);
+                curPage = 2; //因为直出的时候已经把第一页加载好了，所以这里是2
+            }
 
+            lazyload('.lazyloader', {attr: 'data-src'});
             this.initEvent();
 
         },
@@ -123,6 +129,7 @@ define(function(require, exports, module) {
                     });
                 }
             );
+
         },
 
         /**
@@ -143,9 +150,12 @@ define(function(require, exports, module) {
          * 设置无数据的显示
          * @param {Boolean} isNodata [description]
          */
-        setNoData : function (isNodata) {
+        setNoData : function (isNodata, msg) {
             if(isNodata){
                 ui.$nodata.show();
+                if(msg){
+                    ui.$nodata.find('div').text(msg);
+                }
             }
             else {
                 ui.$nodata.hide();
@@ -159,11 +169,7 @@ define(function(require, exports, module) {
          * @return {[type]}          [description]
          */
         renderData : function (datalist) {
-            var tmpl = ui.$listTmpl.html(),
-                data = {list: datalist};
-
-            var r = stpl(tmpl, data);
-
+            var r = listTmpl({list: datalist});
             ui.$datalist.append(r);
 
         },
@@ -175,6 +181,8 @@ define(function(require, exports, module) {
          */
         renderError : function(errorMsg){
             toast.show(errorMsg);
+            this.setNoData(true, errorMsg);
+
         },
 
         /**
@@ -207,9 +215,10 @@ define(function(require, exports, module) {
 
                         if(totalItems && datalist.length){
                             self.renderData(datalist);
+                            self.setNoData(false);
                         }
                         else{
-                            self.setNoData(true);
+                            self.setNoData(true, '还没有任何数据');
                         }
 
                         callback && callback();
@@ -223,11 +232,12 @@ define(function(require, exports, module) {
                         if(retData && retData.message){
                             msg = retData.message;
                         }
-                        self.renderError(msg);
                         if(curPage === 1){
-                            self.setNoData(true);
+                            self.renderError(msg);
                         }
-
+                        else{
+                            toast.show(msg);
+                        }
                     }
                 },
                 function (resJson, retType) {
@@ -241,7 +251,15 @@ define(function(require, exports, module) {
                         return;
                     }
 
-                    self.renderError('出错了：'+JSON.stringify(resJson));
+                    var err = resJson.ret || ['null::后端返回错误'];
+                    var errMsg = err[0].split('::');
+                    var msg = errMsg[1];
+
+                    if(resJson.data && resJson.data.errorDesc){
+                        msg = resJson.data.errorDesc;
+                    }
+
+                    self.renderError(msg);
                 }
             );
 

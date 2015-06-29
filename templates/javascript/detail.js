@@ -59,6 +59,11 @@ define(function(require, exports, module) {
                 });
             });
 
+            window.onload = function(){
+                window.JSTracker && JSTracker.config('sampling', 1);
+                window.JSTracker && JSTracker.config('debug', true);
+            }
+
         },
 
         /**

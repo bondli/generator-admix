@@ -48,9 +48,9 @@ define(function(require, exports, module) {
             else{
                 totalItems = parseInt($('#dataCount').val(), 10);
                 curPage = 2; //因为直出的时候已经把第一页加载好了，所以这里是2
+                lazyload('.lazyloader', {attr: 'data-src'});
             }
 
-            lazyload('.lazyloader', {attr: 'data-src'});
             this.initEvent();
 
         },
@@ -97,6 +97,11 @@ define(function(require, exports, module) {
                     });
                 }
             });
+
+            window.onload = function(){
+                window.JSTracker && JSTracker.config('sampling', 1);
+                window.JSTracker && JSTracker.config('debug', true);
+            }
 
         },
 
@@ -171,6 +176,8 @@ define(function(require, exports, module) {
         renderData : function (datalist) {
             var r = listTmpl({list: datalist});
             ui.$datalist.append(r);
+
+            lazyload('.lazyloader', {attr: 'data-src'});
 
         },
 

@@ -18,6 +18,24 @@ define(function(require, exports, module) {
          * @return {[type]} [description]
          */
         init : function () {
+            if(typeof(window.renderByNode)==='undefined' || window.renderByNode===false) {
+                //loading.show();
+                //this.getData();
+            }
+
+            this.initEvent();
+        },
+
+        /**
+         * 初始化页面点击事件
+         * @return {[type]} [description]
+         */
+        initEvent : function () {
+
+            window.onload = function(){
+                window.JSTracker && JSTracker.config('sampling', 1);
+                window.JSTracker && JSTracker.config('debug', true);
+            }
             
         }
 

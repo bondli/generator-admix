@@ -90,6 +90,11 @@ define(function(require, exports, module) {
                 return self.hasData() ? '信息未保存，确认放弃保存？' : undefined;
             };
 
+            window.onload = function(){
+                window.JSTracker && JSTracker.config('sampling', 1);
+                window.JSTracker && JSTracker.config('debug', true);
+            }
+
         },
 
         /**

@@ -172,12 +172,6 @@ module.exports = function (grunt) {
         cwd: './htmls',
         dest: './htmls-dist',
         src: '*.html'
-      },
-      jslib: {
-        expand: true,
-        cwd: '<%%= yeoman.app %>/bower_components/admix/dist/',
-        dest: '<%%= yeoman.dist %>',
-        src: '*.js'
       }
     },
 
@@ -439,7 +433,6 @@ module.exports = function (grunt) {
     'concat:js',
     'uglify',
     'usemin',
-    'copy:jslib',
     'replace:cdnpath',
     'replace:jspath'
   ]);

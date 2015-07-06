@@ -55,6 +55,11 @@
     -webkit-box-orient: vertical;
 }
 
+/*对于640 16等分 1rem = 40px*/
+.ptr(@p, @v) {
+    @{p}: @v/40rem;
+}
+
 //reset
 body {
     overflow: auto;

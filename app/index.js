@@ -77,6 +77,7 @@ Generator.prototype.packageFiles = function packageFiles() {
   this.template('_package.json', 'package.json');
   this.template('_Gruntfile.js', 'Gruntfile.js');
   this.template('_README.md', 'README.md');
+  this.template('_changelog.md', 'changelog.md');
   this.template('.editorconfig', '.editorconfig');
   this.template('.gitattributes', '.gitattributes');
   this.template('.jshintrc', '.jshintrc');

@@ -7,7 +7,11 @@
  */
 define(function(require, exports, module) {
     // 通过 require 引入依赖
-    var console = require('../../bower_components/admix-ui/build/console/console');
+    var console = require('../../bower_components/admix-ui/build/console');
+    var base = require('../../bower_components/admix-ui/build/base');
+    var nodata = require('../../bower_components/admix-ui/build/nodata');
+    var loading = require('../../bower_components/admix-ui/build/loading');
+    var toast = require('../../bower_components/admix-ui/build/toast');
 
     console.log('startAt:'+g_start.getTime()+', jslibloadedAt:'+g_mstart.getTime()+', jsloadedAt:'+new Date().getTime());
 
@@ -24,6 +28,7 @@ define(function(require, exports, module) {
             }
 
             this.initEvent();
+
         },
 
         /**
@@ -32,11 +37,10 @@ define(function(require, exports, module) {
          */
         initEvent : function () {
 
-            window.onload = function(){
-                window.JSTracker && JSTracker.config('sampling', 1);
-                window.JSTracker && JSTracker.config('debug', true);
-            }
-            
+            window.__WPO.setConfig({
+                sample: 1, // 全部上报
+            });
+
         }
 
     };

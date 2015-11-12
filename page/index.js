@@ -18,24 +18,24 @@ Generator.prototype.createPageFiles = function createPageFiles() {
 
   var htmlFile = 'page.html',
     jsFile = 'page.js',
-    lessFile = 'page.less',
+    scssFile = 'page.scss',
 
     tmpName = (this.name).toLowerCase();
 
   if(tmpName.indexOf('list') > -1){ //list
     htmlFile = 'list.html';
     jsFile = 'list.js';
-    lessFile = 'list.less';
+    scssFile = 'list.scss';
   }
   else if(tmpName.indexOf('detail') > -1){ //detail
     htmlFile = 'detail.html';
     jsFile = 'detail.js';
-    lessFile = 'detail.less';
+    scssFile = 'detail.scss';
   }
   else if(tmpName.indexOf('edit') > -1){ //edit
     htmlFile = 'edit.html';
     jsFile = 'edit.js';
-    lessFile = 'edit.less';
+    scssFile = 'edit.scss';
   }
 
 
@@ -50,14 +50,28 @@ Generator.prototype.createPageFiles = function createPageFiles() {
   );
 
   this.appTemplate(
-    lessFile,
-    path.join('pages', this.name, 'index.less')
+    scssFile,
+    path.join('pages', this.name, 'index.scss')
   );
 
   //增加模版文件
-  this.appTemplate(
-    'jst.html',
-    path.join('pages', this.name, 'tpls', 'index.jst.html')
-  );
+  if(tmpName.indexOf('list') > -1){ //list
+    this.appTemplate(
+      'list.jst.html',
+      path.join('pages', this.name, 'tpls', 'index.jst.html')
+    );
+  }
+  else if(tmpName.indexOf('detail') > -1){ //detail
+    this.appTemplate(
+      'detail.jst.html',
+      path.join('pages', this.name, 'tpls', 'index.jst.html')
+    );
+  }
+  else {
+    this.appTemplate(
+      'empty.jst.html',
+      path.join('pages', this.name, 'tpls', 'index.jst.html')
+    );
+  }
 };
 

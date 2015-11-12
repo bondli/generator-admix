@@ -1,10 +1,8 @@
 {
   "name": "<%= appname %>",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "dependencies": {
-    "framework7": "1.0.4",
-    "admix": "http://github.com/bondli/admix.git",
-    "admix-ui": "git@gitlab.alibaba-inc.com:hongbang.lhb/admix-ui.git#daily/0.0.2"
+    "admix-ui": "git@gitlab.alibaba-inc.com:hongbang.lhb/admix-ui.git#daily/0.1.0"
   }<% if (appPath) { %>,
   "appPath": "<%= appPath %>"<% } %>
 }

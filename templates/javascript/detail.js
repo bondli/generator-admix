@@ -7,27 +7,22 @@
  */
 define(function(require, exports, module) {
     // 通过 require 引入依赖
-    var console = require('../../bower_components/admix-ui/build/console/console');
-    var mtop = require('../../bower_components/admix-ui/build/mtop/mtop');
-    var login = require('../../bower_components/admix-ui/build/login/login');
-    var loading = require('../../bower_components/admix-ui/build/loading/loading');
-    var toast = require('../../bower_components/admix-ui/build/toast/toast');
-    var stpl = require('../../bower_components/admix-ui/build/stpl/stpl');
-    var modal = require('../../bower_components/admix-ui/build/modal/modal');
-    var base = require('../../bower_components/admix-ui/build/base/base');
-    var tips = require('../../bower_components/admix-ui/build/tips/tips');
+    var console = require('../../bower_components/admix-ui/build/console');
+    var base = require('../../bower_components/admix-ui/build/base');
+    var nodata = require('../../bower_components/admix-ui/build/nodata');
+    var loading = require('../../bower_components/admix-ui/build/loading');
+    var toast = require('../../bower_components/admix-ui/build/toast');
+    var dialog = require('../../bower_components/admix-ui/build/dialog');
+    var tips = require('../../bower_components/admix-ui/build/tips');
 
     //统一的接口api管理
     var apimap = require('../../mods/apimap');
+    var infoTmpl = require('./tpls/index.jst');
 
     console.log('startAt:'+g_start.getTime()+', jslibloadedAt:'+g_mstart.getTime()+', jsloadedAt:'+new Date().getTime());
 
     var ui = {
-        $datainfo : $('#datainfo'),
-        $actions : $('#actions'),
-        $nodata : $('#nodata'),
-        $datainfoTmpl : $('#datainfoTpl'),
-        $actionsTmpl : $('#actionsTpl')
+        $body : $('body')
     };
 
     var app = {
@@ -40,6 +35,7 @@ define(function(require, exports, module) {
             if(typeof(window.renderByNode)==='undefined' || window.renderByNode===false) {
                 this.getData();
             }
+
             this.initEvent();
 
         },
@@ -50,19 +46,20 @@ define(function(require, exports, module) {
          */
         initEvent : function () {
             var self = this;
+
             //删除
-            $('body').on('tap', '.delete', function(){
+            $('body').on('tap', '.J_delete', function(){
                 var id = $(this).attr('_val'),
                     type = $(this).attr('_type');
-                modal.confirm({'title':'确认删除该记录?','body':'删除后将无法恢复'}, function(){
+
+                dialog.confirm({'title':'确认删除该记录?','body':'删除后将无法恢复'}, function(){
                     self.deleteData(id, type);
                 });
             });
 
-            window.onload = function(){
-                window.JSTracker && JSTracker.config('sampling', 1);
-                window.JSTracker && JSTracker.config('debug', true);
-            }
+            window.__WPO.setConfig({
+                sample: 1 // 全部上报
+            });
 
         },
 
@@ -84,7 +81,7 @@ define(function(require, exports, module) {
 
             apimap.deleteApi.data = {'id': id};
 
-            mtop.request(apimap.deleteApi,
+            xmtop(apimap.deleteApi,
                 function (resJson, retType) {
                     console.log(resJson);
                     self.afterDelete(id);
@@ -94,15 +91,16 @@ define(function(require, exports, module) {
                         text : '该数据记录已被成功删除!'
                     });
                 },
-                function (resJson, retType) {
+                function (resJson, retType, errMsg) {
                     console.log(resJson);
                     tips.show({
                         type : 'error',
                         title : '删除失败，请稍后再试',
-                        text : '失败原因：'+JSON.stringify(resJson)
+                        text : '失败原因：' + errMsg
                     });
                 }
             );
+
         },
 
         /**
@@ -114,34 +112,15 @@ define(function(require, exports, module) {
         },
 
         /**
-         * 设置无数据的显示
-         * @param {Boolean} isNodata [description]
-         */
-        setNoData : function (isNodata) {
-            if(isNodata){
-                ui.$nodata.show();
-            }
-            else {
-                ui.$nodata.hide();
-            }
-
-        },
-
-        /**
          * 数据渲染到页面上
          * @param  {[type]} datainfo [数据记录对象]
          * @return {[type]}          [description]
          */
         renderData : function (datainfo) {
-            var self = this,
-                dataTmpl = ui.$datainfoTmpl.html(),
-                oprTmpl = ui.$actionsTmpl.html();
+            var self = this;
 
-            var r = stpl(dataTmpl, {datainfo: datainfo});
-            ui.$datainfo.html(r);
-
-            var s = stpl(oprTmpl, {datainfo: datainfo});
-            ui.$actions.show().html(s);
+            var r = infoTmpl({datainfo: datainfo});
+            ui.$body.html(r);
 
         },
 
@@ -152,7 +131,7 @@ define(function(require, exports, module) {
          */
         renderError : function(errorMsg){
             toast.show(errorMsg);
-            this.setNoData(true);
+            nodata.show(errorMsg);
 
         },
 
@@ -170,7 +149,7 @@ define(function(require, exports, module) {
                 'eticketType': 1
             };
 
-            mtop.request(apimap.detailApi,
+            xmtop(apimap.detailApi,
                 function (resJson, retType) {
                     console.log(resJson);
 
@@ -180,18 +159,13 @@ define(function(require, exports, module) {
 
                     //返回的数据是ok的
                     if(retData.failure == 'false' && retData.module){
-                        try{
-                            var datainfo = retData.module;
+                        var datainfo = retData.module;
 
-                            if(datainfo){
-                                self.renderData(datainfo);
-                            }
-                            else{
-                                self.setNoData(true);
-                            }
+                        if(datainfo){
+                            self.renderData(datainfo);
                         }
-                        catch(e){
-                            self.renderError('出错了：'+JSON.stringify(e));
+                        else{
+                            nodata.show('获取数据失败，可能是被删除了');
                         }
                     }
                     //错误的数据格式
@@ -200,18 +174,12 @@ define(function(require, exports, module) {
                         self.renderError(msg);
                     }
                 },
-                function (resJson, retType) {
+                function (resJson, retType, errMsg) {
                     console.log(resJson);
 
                     loading.hide();
 
-                    if(retType === 1 || retType === 2){
-                        toast.show('session失效，请重新登录');
-                        login.goLogin();
-                        return;
-                    }
-
-                    self.renderError('出错了：'+JSON.stringify(e));
+                    self.renderError('出错了：' + errMsg);
                 }
             );
 

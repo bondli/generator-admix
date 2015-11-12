@@ -13,11 +13,11 @@
     <meta content="telephone=no,email=no" name="format-detection" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <!--meta name="spm-id" content="a1z2q.7513492"/-->
-    <link rel="apple-touch-icon" href="/favicon.png" />
-    <link rel="Shortcut Icon" href="/favicon.png" type="image/x-icon" />
     <title><%= pageName%></title>
 
     <script>g_start = new Date();</script>
+
+    <link rel="stylesheet" href="//g.alicdn.com/o2o/admix/0.1.0/admix.css?v=20151101">
 
     <!-- build:css /<%= pageName%>/index.css -->
     <link rel="stylesheet" href="/<%= pageName%>/index.css">
@@ -27,63 +27,46 @@
 
 <body>
 
-<div class="list-block mt0">
-    <ul>
-        <li>
-            <div class="item-content">
-                <div class="item-inner">
-                    <div class="item-input">
-                        <input id="title" type="text" placeholder="填写标题（最多15个字）">
-                    </div>
-                </div>
-            </div>
-        </li>
-        <li>
-            <div class="item-content">
-                <div class="item-inner">
-                    <div class="item-input">
-                        <textarea id="desc" type="text" placeholder="填写描述（描述规则或要求，最多1000字）"></textarea>
-                    </div>
-                </div>
-            </div>
-        </li>
-    </ul>
-</div>
-
-<div class="list-block mb60">
-    <ul>
-        <li>
-            <div class="item-content">
-                <div class="item-inner">
-                    <div class="item-title label">开始时间</div>
-                    <div class="item-input">
-                        <input id="startTime" type="datetime-local" placeholder="开始时间">
-                    </div>
-                </div>
-            </div>
-        </li>
-        <li>
-            <div class="item-content">
-                <div class="item-inner">
-                    <div class="item-title label">结束时间</div>
-                    <div class="item-input">
-                        <input id="endTime" type="datetime-local" placeholder="结束时间">
-                    </div>
-                </div>
-            </div>
-        </li>
-    </ul>
-</div>
-
-<div class="toolbar">
-    <div class="toolbar-inner">
-        <a id="save" href="javascript:;" class="button button-big">
-            提交
-        </a>
+<div class="input-group">
+    <div class="input-row full-width">
+        <input id="title" type="text" placeholder="填写标题（最多20个字）" data-rule="require" data-msg="标题必须填写">
+    </div>
+    <div class="input-row auto-height">
+        <textarea id="desc" type="text" placeholder="填写描述（描述优惠券的使用说明、规则或要求，最多150字）" data-rule="require" data-msg="描述必须填写"></textarea>
     </div>
 </div>
 
-<script src="//g.alicdn.com/o2o/admix/0.0.1/admix.js?v=20150707"></script>
+<div class="input-group">
+    <div class="input-row">
+        <label>开始时间</label>
+        <input type="text" id="startTime" placeholder="开始时间">
+    </div>
+    <div class="input-row">
+        <label>结束时间</label>
+        <input type="text" id="endTime" placeholder="结束时间">
+    </div>
+</div>
+
+<div class="input-group">
+    <div class="input-row">
+        <label>类型</label>
+        <input type="text" id="type" placeholder="类型" data-rule="require" data-msg="类型必须选择">
+    </div>
+    <div class="input-row">
+        <label>零售价</label>
+        <input type="number" id="price" placeholder="零售价" data-rule="require" data-min="0.01" data-max="100" data-msg="价格填写不正确">
+    </div>
+</div>
+
+<nav class="bar bar-tab">
+    <div class="bar-inner">
+        <a id="save" href="javascript:;" class="btn btn-primary btn-block">
+            提交
+        </a>
+    </div>
+</nav>
+
+<script src="//g.alicdn.com/o2o/admix/0.1.0/admix-zepto.js?v=20151101" crossorigin></script>
 
 <!-- 配置模块 -->
 <script>
@@ -94,10 +77,10 @@ var basePath = 'o2o/<%= appname%>/{version}/',
 
 if (~l.hostname.indexOf('waptest.taobao.com') ||
     ~l.hostname.indexOf('daily.taobao.net')) {      //daily
-    basePath = '//g-assets.daily'+''+'.taobao.net/' + basePath;
+    basePath = '//g-assets.daily.taobao.net/' + basePath;
 }
 else if (~l.hostname.indexOf('wapa.taobao.com')) {  //yufa
-    basePath = '//g-assets.daily'+''+'.taobao.net/' + basePath;
+    basePath = '//g-assets.daily.taobao.net/' + basePath;
 }
 else  {                                             //online
     basePath = '//g.alicdn.com/' + basePath;

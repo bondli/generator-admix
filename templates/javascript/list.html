@@ -13,11 +13,11 @@
     <meta content="telephone=no,email=no" name="format-detection" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <!--meta name="spm-id" content="a1z2q.7513492"/-->
-    <link rel="apple-touch-icon" href="/favicon.png" />
-    <link rel="Shortcut Icon" href="/favicon.png" type="image/x-icon" />
     <title><%= pageName%></title>
 
     <script>g_start = new Date();</script>
+
+    <link rel="stylesheet" href="//g.alicdn.com/o2o/admix/0.1.0/admix.css?v=20151101">
 
     <!-- build:css /<%= pageName%>/index.css -->
     <link rel="stylesheet" href="/<%= pageName%>/index.css">
@@ -27,23 +27,21 @@
 
 <body>
 
-<!-- no data -->
-<div id="nodata">
-    <i class="iconfont icon-nodata"></i>
-    <div>还没有任何数据记录</div>
-</div>
+<header class="bar bar-nav">
+    <div class="bar-inner">
+        <a class="nav-item active" _val="">全部</a>
+        <a class="nav-item" _val="1">待审核</a>
+        <a class="nav-item" _val="3">投放中</a>
+        <a class="nav-item" _val="2">审核退回</a>
+    </div>
+</header>
 
-<!-- datalist -->
-<div class="list-block media-list">
-    <ul id="datalist"></ul>
-    <div id="loadmore"></div>
-</div>
+<div id="datalist"></div>
+<div id="loadmore"></div>
 
-<!-- add button -->
-<a id="add" class="plus-btn iconfont" href="edit.html"></a>
+<a id="add" href="edit.html" class="icon icon-plus"></a>
 
-
-<script src="//g.alicdn.com/o2o/admix/0.0.1/admix.js?v=20150707"></script>
+<script src="//g.alicdn.com/o2o/admix/0.1.0/admix-zepto.js?v=20151101" crossorigin></script>
 
 <!-- 配置模块 -->
 <script>
@@ -54,10 +52,10 @@ var basePath = 'o2o/<%= appname%>/{version}/',
 
 if (~l.hostname.indexOf('waptest.taobao.com') ||
     ~l.hostname.indexOf('daily.taobao.net')) {      //daily
-    basePath = '//g-assets.daily'+''+'.taobao.net/' + basePath;
+    basePath = '//g-assets.daily.taobao.net/' + basePath;
 }
 else if (~l.hostname.indexOf('wapa.taobao.com')) {  //yufa
-    basePath = '//g-assets.daily'+''+'.taobao.net/' + basePath;
+    basePath = '//g-assets.daily.taobao.net/' + basePath;
 }
 else  {                                             //online
     basePath = '//g.alicdn.com/' + basePath;

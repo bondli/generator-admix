@@ -78,10 +78,10 @@ Generator.prototype.packageFiles = function packageFiles() {
   this.template('_Gruntfile.js', 'Gruntfile.js');
   this.template('_README.md', 'README.md');
   this.template('_changelog.md', 'changelog.md');
-  this.template('.editorconfig', '.editorconfig');
-  this.template('.gitattributes', '.gitattributes');
-  this.template('.jshintrc', '.jshintrc');
-  this.template('gitignore', '.gitignore');
+  this.template('_editorconfig', '.editorconfig');
+  this.template('_gitattributes', '.gitattributes');
+  this.template('_jshintrc', '.jshintrc');
+  this.template('_gitignore', '.gitignore');
 
   fs.mkdir('app');
 
@@ -91,7 +91,7 @@ Generator.prototype.packageFiles = function packageFiles() {
 
   fs.mkdir('app/mods');
 
-  this.template('common.less', 'app/mods/common.less');
+  this.template('common.scss', 'app/mods/common.scss');
   this.template('apimap.js', 'app/mods/apimap.js');
 
 };

@@ -54,12 +54,12 @@ module.exports = function (grunt) {
           livereload: '<%%= connect.options.livereload %>'
         }
       },
-      less: {
+      scss: {
         files: [
-          '<%%= yeoman.app %>/pages/{,*/}*.less',
-          '<%%= yeoman.app %>/mods/{,*/}*.less'
+          '<%%= yeoman.app %>/pages/{,*/}*.scss',
+          '<%%= yeoman.app %>/mods/{,*/}*.scss'
         ],
-        tasks: ['less:server'],
+        tasks: ['compass:server'],
         options: {
           livereload: '<%%= connect.options.livereload %>'
         }
@@ -176,26 +176,16 @@ module.exports = function (grunt) {
     },
 
     // Compiles less to CSS and generates necessary files if requested
-    less: {
+    compass: {
       server: {
-        files: [{
-          expand: true,
-          cwd: '<%%= yeoman.app %>/pages',
-          src: ['**/*.less'],
-          dest: '.tmp/',
-          ext: '.css'
-        }]
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%%= yeoman.app %>/pages',
-          src: ['**/*.less'],
-          dest: '.tmp/',
-          ext: '.css'
-        }],
         options: {
-          yuicompress: true
+          sassDir: '<%%= yeoman.app %>/pages',
+          cssDir: '.tmp/',
+          cacheDir: '.tmp/',
+          relativeAssets: false,
+          assetCacheBuster: false,
+          raw: 'Sass::Script::Number.precision = 10\n',
+          debugInfo: false
         }
       }
     },
@@ -280,14 +270,17 @@ module.exports = function (grunt) {
       options: {
         blockReplacements: {
           css: function (block) {
-            var path = appConfig.cdnPrefix + appConfig.group + '/' + appConfig.appName + '/' + appConfig.version;
-            return '<link rel="stylesheet" href="'+path+block.dest+'">';
-          },
-          js: function(block){
-            var path = appConfig.cdnPrefix + appConfig.group + '/' + appConfig.appName + '/' + appConfig.version;
-            return '<script src="'+path+block.dest+'"></script>';
+            //var path = appConfig.cdnPrefix + appConfig.group + '/' + appConfig.appName + '/' + appConfig.version;
+            return '<link rel="stylesheet" href="../build'+block.dest+'?__inline">';
           }
         }
+      }
+    },
+
+    // Inlines css into the same file.
+    inline: {
+      dist: {
+        src: ['./htmls-dist/*.html']
       }
     },
 
@@ -394,8 +387,8 @@ module.exports = function (grunt) {
 
     // Run some tasks in parallel to speed up the build process
     concurrent: {
-      server: ['less:server'],
-      dist: ['less:dist']
+      server: ['compass:server'],
+      dist: ['compass:dist']
     },
 
     // generator index.html
@@ -426,7 +419,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'copy:pages',
-    'concurrent:dist',
+    'concurrent:server',
     'cssmin',
     'underscore_jst',
     'transport',
@@ -434,6 +427,7 @@ module.exports = function (grunt) {
     'uglify',
     'usemin',
     'replace:cdnpath',
+    'inline:dist',
     'replace:jspath'
   ]);
 

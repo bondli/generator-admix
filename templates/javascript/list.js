@@ -7,30 +7,29 @@
  */
 define(function(require, exports, module) {
     // 通过 require 引入依赖
-    var console = require('../../bower_components/admix-ui/build/console/console');
-    var mtop = require('../../bower_components/admix-ui/build/mtop/mtop');
-    var login = require('../../bower_components/admix-ui/build/login/login');
-    var loading = require('../../bower_components/admix-ui/build/loading/loading');
-    var toast = require('../../bower_components/admix-ui/build/toast/toast');
-    var lazyload = require('../../bower_components/admix-ui/build/lazyload/lazyload');
-    var modal = require('../../bower_components/admix-ui/build/modal/modal');
-    var monitor = require('../../bower_components/admix-ui/build/scrollmonitor/scrollmonitor');
+    var console = require('../../bower_components/admix-ui/build/console');
+    var base = require('../../bower_components/admix-ui/build/base');
+    var nodata = require('../../bower_components/admix-ui/build/nodata');
+    var loading = require('../../bower_components/admix-ui/build/loading');
+    var toast = require('../../bower_components/admix-ui/build/toast');
+    var lazyload = require('../../bower_components/admix-ui/build/lazyload');
+    var actionsheet = require('../../bower_components/admix-ui/build/actionsheet');
+    var monitor = require('../../bower_components/admix-ui/build/scrollmonitor');
 
-    //统一的接口api管理
     var apimap = require('../../mods/apimap');
-    var listTmpl = require('./tpls/index.jst');
+    var tmpl = require('./tpls/index.jst');
 
     console.log('startAt:'+g_start.getTime()+', jslibloadedAt:'+g_mstart.getTime()+', jsloadedAt:'+new Date().getTime());
 
-    var totalItems = 0,
+    var curType = '', //当前查询订单的类型
+        totalItems = 0,
         curPage = 1,
         pageSize = 6; //默认一页的数据
 
     var ui = {
         $datalist : $('#datalist'),
-        $loadmore : $('#loadmore'),
-        $nodata : $('#nodata'),
-        $listTmpl : $('#listTpl')
+        $queryTab : $('.bar-nav .nav-item'),
+        $loadmore : $('#loadmore')
     };
 
     var app = {
@@ -40,15 +39,14 @@ define(function(require, exports, module) {
          * @return {[type]} [description]
          */
         init : function () {
-
             if(typeof(window.renderByNode)==='undefined' || window.renderByNode===false) {
                 loading.show();
                 this.getData();
             }
-            else{
+            else {
                 totalItems = parseInt($('#dataCount').val(), 10);
-                curPage = 2; //因为直出的时候已经把第一页加载好了，所以这里是2
-                lazyload('.lazyloader', {attr: 'data-src'});
+                curPage = 2;
+                lazyload('.J_lazyloader', {attr: 'data-src'});
             }
 
             this.initEvent();
@@ -60,33 +58,102 @@ define(function(require, exports, module) {
          * @return {[type]} [description]
          */
         initEvent : function () {
+
+            window.__WPO.setConfig({
+                sample: 1, // 全部上报
+            });
+
             var self = this;
-            //删除
-            $('body').on('tap', '.delete', function(){
-                var id = $(this).attr('_val');
-                modal.confirm({'title':'确认删除该记录?','body':'删除后将无法恢复'}, function(){
-                    self.deleteData(id);
+
+            //删除优惠券
+            $('body').on('tap', '.J_delete', function(){
+                var id = $(this).attr('_val'),
+                    type = $(this).attr('_type');
+
+                actionsheet.show({
+                    title: '你将删除改记录，删除后无法恢复',
+                    list: [
+                        {
+                            "name" : "确认删除",
+                            "callback" : function(){
+                                self.deleteData(id, type);
+                            }
+                        },
+                    ],
+                    cancelWord: '取消'
                 });
             });
 
-            //编辑
-            $('body').on('tap', '.edit', function(){
-                var id = $(this).attr('_val');
-                window.location.href = 'edit.html?id='+id;
+            //编辑优惠券
+            $('body').on('tap', '.J_edit', function(){
+                var id = $(this).attr('_val'),
+                    type = $(this).attr('_type');
+
+                window.location.href = 'edit.html?id='+id+'&type='+type;
             });
 
-            //滚动监控
+            //点击tab切换数据
+            self.switchTabEvent();
+
+            //滚动加载
+            self.scollPageEvent();
+
+        },
+
+        /**
+         * 切换tab事件
+         * @return {[type]} [description]
+         */
+        switchTabEvent : function () {
+            var self = this;
+
+            ui.$queryTab.tap(function(){
+                var $me = $(this);
+
+                if($me.hasClass('active')){
+                    return;
+                }
+
+                //先清除原来的数据
+                ui.$datalist.html('');
+
+                loading.show();
+
+                curType = $me.attr('_val');
+                curPage = 1;
+
+                $me.siblings().removeClass('active');
+                $me.addClass('active');
+
+                //重新打开 monitor
+                monitor.reopen();
+                ui.$loadmore.html('');
+
+                self.getData();
+
+            });
+
+        },
+
+        /**
+         * 滚动页面事件
+         * @return {[type]} [description]
+         */
+        scollPageEvent : function () {
+            var self = this;
+
             monitor.init({
                 'scrollToBottom': function(){
 
                     if(curPage > Math.ceil(totalItems/pageSize)){
                         monitor.stop();
-                        if(totalItems > 0){
+                        if(totalItems){
                             ui.$loadmore.html('没有更多数据了');
                         }
                         return;
                     }
 
+                    ui.$loadmore.html('');
                     loading.show({
                         renderTo: '#loadmore'
                     });
@@ -98,40 +165,33 @@ define(function(require, exports, module) {
                 }
             });
 
-            window.onload = function(){
-                window.JSTracker && JSTracker.config('sampling', 1);
-                window.JSTracker && JSTracker.config('debug', true);
-            }
-
         },
 
         /**
-         * 删除
-         * @param  {[type]} id [记录ID]
+         * 删除数据
+         * @param  {[type]} id [description]
+         * @param  {[type]} type [description]
          * @return {[type]}    [description]
          */
-        deleteData : function (id) {
-            var self = this;
+        deleteData : function (id, type) {
+            var self = this,
+                apiInfo = apimap.deleteApi;
 
-            apimap.deleteApi.data = {'id': id};
+            apiInfo.data = {
+                eticketId: id,
+                eticketType: type
+            };
 
-            mtop.request(apimap.deleteApi,
+            xmtop(apiInfo,
                 function (resJson, retType) {
                     console.log(resJson);
                     self.afterDelete(id);
-                    tips.show({
-                        type : 'success',
-                        title : '操作成功',
-                        text : '该数据记录已被成功删除!'
-                    });
+                    toast.show('操作成功，该记录已被删除!');
                 },
-                function (resJson, retType) {
+                function (resJson, retType, errMsg) {
                     console.log(resJson);
-                    tips.show({
-                        type : 'error',
-                        title : '删除失败，请稍后再试',
-                        text : '失败原因：'+JSON.stringify(resJson)
-                    });
+
+                    toast.show(errMsg);
                 }
             );
 
@@ -139,73 +199,60 @@ define(function(require, exports, module) {
 
         /**
          * 删除后的处理
-         * @param  {[type]} id [记录ID]
+         * @param  {[type]} id [description]
          * @return {[type]}    [description]
          */
         afterDelete : function (id) {
             $('#data-item-'+id).remove();
             //如果没有任何记录了需要把没有数据的提示显示出来
-            if( ui.$datalist.find('li').length === 0 ){
-                this.setNoData(true);
-            }
-
-        },
-
-        /**
-         * 设置无数据的显示
-         * @param {Boolean} isNodata [description]
-         */
-        setNoData : function (isNodata, msg) {
-            if(isNodata){
-                ui.$nodata.show();
-                if(msg){
-                    ui.$nodata.find('div').text(msg);
-                }
-            }
-            else {
-                ui.$nodata.hide();
+            if( $('#datalist ul').length === 0 ){
+                nodata.show();
             }
 
         },
 
         /**
          * 数据渲染到页面上
-         * @param  {[type]} datalist [查询到的数据列表]
+         * @param  {[type]} datalist [description]
          * @return {[type]}          [description]
          */
         renderData : function (datalist) {
-            var r = listTmpl({list: datalist});
+            var r = tmpl({list: datalist});
             ui.$datalist.append(r);
+            lazyload('.J_lazyloader', {attr: 'data-src'});
 
-            lazyload('.lazyloader', {attr: 'data-src'});
+            if(datalist.length == pageSize){ //可能还有下一页
+                ui.$loadmore.html('上拉加载更多');
+            }
 
         },
 
         /**
          * 加载失败信息到页面上
-         * @param  {[type]} errorMsg [错误信息]
+         * @param  {[type]} errorMsg [description]
          * @return {[type]}          [description]
          */
         renderError : function(errorMsg){
             toast.show(errorMsg);
-            this.setNoData(true, errorMsg);
+            nodata.show(errorMsg);
 
         },
 
         /**
-         * 拉取数据列表
-         * @param  {Function} callback [成功后的处理函数]
-         * @return {[type]}            [description]
+         * 拉取数据数据
+         * @return {[type]} [description]
          */
         getData : function (callback) {
-            var self = this;
+            var self = this,
+                apiInfo = apimap.listApi;
 
-            apimap.listApi.data = {
+            apiInfo.data = {
                 'pageNo': curPage,
-                'pageSize': pageSize
+                'pageSize': pageSize,
+                'status': curType
             };
 
-            mtop.request(apimap.listApi,
+            xmtop(apiInfo,
                 function (resJson, retType) {
                     console.log(resJson);
 
@@ -214,7 +261,7 @@ define(function(require, exports, module) {
                     var retData = resJson ? resJson.data : {};
 
                     //返回的数据是ok的
-                    if(retData.failure == 'false' && retData.module && retData.module.length){
+                    if((retData.failure == 'false' || retData.failure == false) && retData.module){
                         var datalist = retData.module;
 
                         //获取总记录数
@@ -222,10 +269,10 @@ define(function(require, exports, module) {
 
                         if(totalItems && datalist.length){
                             self.renderData(datalist);
-                            self.setNoData(false);
+                            nodata.hide();
                         }
                         else{
-                            self.setNoData(true, '还没有任何数据');
+                            nodata.show('还没有任何优惠券');
                         }
 
                         callback && callback();
@@ -233,40 +280,20 @@ define(function(require, exports, module) {
                         //更新当前页码
                         curPage++;
                     }
-                    //错误的数据格式
                     else{
-                        var msg = '返回的数据格式错误';
-                        if(retData && retData.message){
-                            msg = retData.message;
+                        var msg = '后端服务异常，请稍后再试';
+                        if(retData && retData.errorDesc){
+                            msg = retData.errorDesc;
                         }
-                        if(curPage === 1){
-                            self.renderError(msg);
-                        }
-                        else{
-                            toast.show(msg);
-                        }
+                        self.renderError(msg);
                     }
                 },
-                function (resJson, retType) {
+                function (resJson, retType, errMsg) {
                     console.log(resJson);
 
                     loading.hide();
 
-                    if(retType === 1 || retType === 2){
-                        toast.show('session失效，请重新登录');
-                        login.goLogin();
-                        return;
-                    }
-
-                    var err = resJson.ret || ['null::后端返回错误'];
-                    var errMsg = err[0].split('::');
-                    var msg = errMsg[1];
-
-                    if(resJson.data && resJson.data.errorDesc){
-                        msg = resJson.data.errorDesc;
-                    }
-
-                    self.renderError(msg);
+                    self.renderError(errMsg);
                 }
             );
 

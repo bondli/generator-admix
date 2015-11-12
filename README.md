@@ -1,14 +1,14 @@
 # admix generator
 
 
-> Yeoman generator for admix(zepto+seajs+F7) project - lets you quickly set up a project with sensible defaults and best practices.
+> Yeoman generator for admix project - lets you quickly set up a project with sensible defaults and best practices.
 
 **构建成功后的工程目录结构说明：**
 
 ```
 |- project-name/                #项目目录
   |- app/
-    |- bower_components         #zepto+seajs+F7等外部组件
+    |- bower_components         #外部组件
     |- mods                     #项目组件
     |- pages                    #页面JS
   |- htmls                      #页面文件

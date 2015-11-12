@@ -1,0 +1,13 @@
+@import "../../mods/common.scss";
+
+#save {
+    margin: 0 10px;
+    top:0.4rem;
+    width:auto;
+    border: 1px solid $btnColor;
+    background: $btnColor;
+}
+#save:active {
+    background: $btnPressColor;
+    color: #fff;
+}

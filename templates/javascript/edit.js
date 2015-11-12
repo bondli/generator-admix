@@ -7,14 +7,15 @@
  */
 define(function(require, exports, module) {
     // 通过 require 引入依赖
-    var console = require('../../bower_components/admix-ui/build/console/console');
-    var mtop = require('../../bower_components/admix-ui/build/mtop/mtop');
-    var login = require('../../bower_components/admix-ui/build/login/login');
-    var loading = require('../../bower_components/admix-ui/build/loading/loading');
-    var toast = require('../../bower_components/admix-ui/build/toast/toast');
-    var base = require('../../bower_components/admix-ui/build/base/base');
-    var tips = require('../../bower_components/admix-ui/build/tips/tips');
-    var datetime = require('../../bower_components/admix-ui/build/base/datetime');
+    var console = require('../../bower_components/admix-ui/build/console');
+    var base = require('../../bower_components/admix-ui/build/base');
+    var loading = require('../../bower_components/admix-ui/build/loading');
+    var toast = require('../../bower_components/admix-ui/build/toast');
+    var tips = require('../../bower_components/admix-ui/build/tips');
+    var datetime = require('../../bower_components/admix-ui/build/datetime');
+    var FormValid = require('../../bower_components/admix-ui/build/formvalid');
+    var Picker = require('../../bower_components/admix-ui/build/picker');
+    var Calendar = require('../../bower_components/admix-ui/build/calendar');
 
     //统一的接口api管理
     var apimap = require('../../mods/apimap');
@@ -34,8 +35,34 @@ define(function(require, exports, module) {
         $startTime : $('#startTime'),
         $endTime : $('#endTime'),
 
+        $type : $('#type'),
+        $price : $('#price'),
+
         $saveBtn : $('#save')
     };
+
+    //表单验证处理
+    var fv = new FormValid({
+        handAllResult: function(errors){
+            if(errors.length){
+                toast.show(errors[0].msg);
+            }
+        },
+        handFieldResult: function(elem, msg, isShow){
+            //isShow && console.log(msg);
+        }
+    });
+
+    //选类型
+    var pickerType = new Picker({
+        input: '#type',
+        data: {
+            1 : '兑换券',
+            2 : '代金券',
+            3 : '满折券',
+            4 : '满减券'
+        }
+    });
 
     var app = {
 
@@ -44,7 +71,6 @@ define(function(require, exports, module) {
          * @return {[type]} [description]
          */
         init : function () {
-            loading.show();
 
             if( this.getId() ){
                 base.setDocTitle('修改');
@@ -53,20 +79,22 @@ define(function(require, exports, module) {
                 if(typeof(window.renderByNode)==='undefined' || window.renderByNode===false) {
                     this.getData();
                 }
-                else{
-                    loading.hide();
+                else {
+                    //从页面JS中获取数据
+                    if(datainfoByNode){
+                        this.renderData(datainfoByNode);
+                    }
                 }
             }
             else {
-                ui.$startTime.val( datetime.formatDate('yyyy-MM-ddTHH:mm', next1hour) );
-                ui.$endTime.val( datetime.formatDate('yyyy-MM-ddTHH:mm', next7day) );
-
-                //设置字段的显示和隐藏
-                this.setFields();
+                this.renderData({
+                    title : '',
+                    desc : '',
+                    startTime : datetime.formatDate('yyyy-MM-dd HH:mm', next1hour),
+                    endTime : datetime.formatDate('yyyy-MM-dd HH:mm', next7day)
+                });
 
                 base.setDocTitle('添加');
-
-                loading.hide();
             }
 
             this.initEvent();
@@ -90,17 +118,9 @@ define(function(require, exports, module) {
                 return self.hasData() ? '信息未保存，确认放弃保存？' : undefined;
             };
 
-            window.onload = function(){
-                window.JSTracker && JSTracker.config('sampling', 1);
-                window.JSTracker && JSTracker.config('debug', true);
-            }
-
-        },
-
-        /**
-         * 字段显示控制
-         */
-        setFields : function () {
+            window.__WPO.setConfig({
+                sample: 1 // 全部上报
+            });
 
         },
 
@@ -125,44 +145,8 @@ define(function(require, exports, module) {
                 startTime = $.trim( ui.$startTime.val() ),
                 endTime = $.trim( ui.$endTime.val() );
 
-            if(startTime){
-                startTime = startTime.replace('T',' ');
-                //兼容三星的问题
-                startTime = startTime.replace('z','')+ ':00';
-            }
-            if(endTime){
-                endTime = endTime.replace('T',' ');
-                //兼容三星的问题
-                endTime = endTime.replace('z','')+ ':00';
-            }
-
-            if(title == ''){
-                toast.show('标题不能为空');
-                return false;
-            }
-
-            if(title.length > 15){
-                toast.show('标题不能大于15个字符');
-                return false;
-            }
-
-            if(desc == ''){
-                toast.show('描述不能为空');
-                return false;
-            }
-
             if(desc.length > 150){
                 toast.show('描述不能大于150个字符');
-                return false;
-            }
-
-            if(startTime == ''){
-                toast.show('开始时间为空或填写不正确');
-                return false;
-            }
-
-            if(endTime == ''){
-                toast.show('结束时间为空或填写不正确');
                 return false;
             }
 
@@ -180,6 +164,7 @@ define(function(require, exports, module) {
             return {
                 title : title,
                 desc: desc,
+                eticketType: $.trim( ui.$type.attr('_val') ),
                 validityBegin: startTime,
                 validityEnd: endTime
             };
@@ -202,10 +187,23 @@ define(function(require, exports, module) {
         renderData : function (datainfo) {
             ui.$title.val( datainfo.title );
             ui.$desc.val( datainfo.desc );
-            ui.$startTime.val( datetime.formatDate('yyyy-MM-ddTHH:mm',base.strToDate(datainfo.startTime)) );
-            ui.$endTime.val( datetime.formatDate('yyyy-MM-ddTHH:mm',base.strToDate(datainfo.endTime)) );
+            ui.$startTime.val( datetime.formatDate('yyyy-MM-dd HH:mm',base.strToDate(datainfo.startTime)) );
+            ui.$endTime.val( datetime.formatDate('yyyy-MM-dd HH:mm',base.strToDate(datainfo.endTime)) );
 
-            this.setFields();
+            //设置默认选中的类型
+            if(datainfo.type){
+                pickerType.setValue(datainfo.type - 0);
+            }
+
+            //选时间
+            var startTimePicker = new Calendar({
+                input: '#startTime',
+                type: 'datetime'
+            });
+            var endTimePicker = new Calendar({
+                input: '#endTime',
+                type: 'datetime'
+            });
 
         },
 
@@ -225,12 +223,14 @@ define(function(require, exports, module) {
         getData : function () {
             var self = this;
 
+            loading.show();
+
             apimap.detailApi.data = {
                 'eticketId': self.getId(),
                 'eticketType': 1
             };
 
-            mtop.request(apimap.detailApi,
+            xmtop(apimap.detailApi,
                 function (resJson, retType) {
                     console.log(resJson);
 
@@ -240,19 +240,12 @@ define(function(require, exports, module) {
 
                     //返回的数据是ok的
                     if(retData.failure == 'false' && retData.module){
-                        try{
-                            var datainfo = retData.module;
-
-                            if(datainfo){
-                                self.renderData(datainfo);
-                            }
-                            else{
-                                self.setNoData(true);
-                                self.setGetDataFailed();
-                            }
+                        var datainfo = retData.module;
+                        if(datainfo){
+                            self.renderData(datainfo);
                         }
-                        catch(e){
-                            self.renderError('出错了：'+JSON.stringify(e));
+                        else{
+                            self.renderError('出错了：返回的数据格式错误');
                             self.setGetDataFailed();
                         }
                     }
@@ -263,20 +256,14 @@ define(function(require, exports, module) {
                         self.setGetDataFailed();
                     }
                 },
-                function (resJson, retType) {
+                function (resJson, retType, errMsg) {
                     console.log(resJson);
 
                     loading.hide();
 
-                    if(retType === 1 || retType === 2){
-                        toast.show('session失效，请重新登录');
-                        login.goLogin();
-                        return;
-                    }
-
                     self.setGetDataFailed();
 
-                    self.renderError('出错了：'+JSON.stringify(e));
+                    self.renderError('出错了：'+errMsg);
                 }
             );
 
@@ -303,6 +290,12 @@ define(function(require, exports, module) {
                 return;
             }
 
+            var b = fv.checkAll();
+            if(!b){
+                //toast.show('表单验证不通过');
+                return;
+            }
+
             var result = self.checkData();
             //console.log(result);
 
@@ -320,7 +313,7 @@ define(function(require, exports, module) {
                 apimap.updateApi.data.eticketType = 1;
             }
 
-            mtop.request(apimap.updateApi,
+            xmtop(apimap.updateApi,
                 function (resJson, retType) {
                     console.log(resJson);
 
@@ -353,22 +346,11 @@ define(function(require, exports, module) {
                         });
                     }
                 },
-                function (resJson, retType) {
+                function (resJson, retType, errMsg) {
                     console.log(resJson);
 
                     loading.hide();
                     isSaving = false;
-
-                    if(retType === 1 || retType === 2){
-                        toast.show('session失效，请重新登录');
-                        login.goLogin();
-                        return;
-                    }
-
-                    var msg = '后台返回错误';
-                    if(resJson.data && resJson.data.errorDesc){
-                        msg = resJson.data.errorDesc;
-                    }
 
                     //清除返回事件
                     window.onbeforeunload  = null;
@@ -376,10 +358,11 @@ define(function(require, exports, module) {
                     tips.show({
                         type: 'error',
                         title: '提交失败',
-                        text: msg
+                        text: errMsg
                     });
                 }
             );
+
         }
 
     };

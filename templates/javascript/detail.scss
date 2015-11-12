@@ -1,0 +1,28 @@
+@import "../../mods/common.scss";
+
+.status {
+    color: #fff;
+    background: #515160;
+
+    i {
+        display: inline-block;
+        float: left;
+        margin-top: 3px;
+    }
+    .icon-info:before{
+        font-size: 20px;
+    }
+    .status-title, .status-desc {
+        margin: 0;
+        padding-left: 20px;
+        height: 30px;
+        line-height: 30px;
+    }
+    .status-title {
+        font-size: 16px;
+    }
+    .status-desc {
+        color: #fff;
+        height: auto;
+    }
+}

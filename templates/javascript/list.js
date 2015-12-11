@@ -19,7 +19,8 @@ define(function(require, exports, module) {
     var apimap = require('../../mods/apimap');
     var tmpl = require('./tpls/index.jst');
 
-    console.log('startAt:'+g_start.getTime()+', jslibloadedAt:'+g_mstart.getTime()+', jsloadedAt:'+new Date().getTime());
+    g_mend = new Date();
+    console.log('startAt:'+g_start.getTime()+', jslibloadedAt:'+g_mstart.getTime()+', jsloadedAt:'+g_mend.getTime());
 
     var curType = '', //当前查询订单的类型
         totalItems = 0,
@@ -62,6 +63,13 @@ define(function(require, exports, module) {
             window.__WPO.setConfig({
                 sample: 1, // 全部上报
             });
+
+            //自定义测速上报
+            window.onload = function () {
+                window.__WPO.speed(0, g_mstart.getTime() - g_start.getTime()); //样式，框架耗时
+                window.__WPO.speed(1, g_mend.getTime() - g_mstart.getTime());  //模块加载耗时
+                window.__WPO.speed(2, new Date().getTime() - g_mend.getTime());//页面执行耗时
+            }
 
             var self = this;
 

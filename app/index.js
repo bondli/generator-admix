@@ -92,6 +92,7 @@ Generator.prototype.packageFiles = function packageFiles() {
   fs.mkdir('app/mods');
 
   this.template('common.scss', 'app/mods/common.scss');
+  this.template('mixins.scss', 'app/mods/mixins.scss');
   this.template('apimap.js', 'app/mods/apimap.js');
 
 };

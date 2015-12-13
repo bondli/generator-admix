@@ -2,6 +2,7 @@
   "name": "<%= appname %>",
   "version": "0.0.1",
   "dependencies": {
+    "admix": "git@gitlab.alibaba-inc.com:o2o/admix.git",
     "admix-ui": "git@gitlab.alibaba-inc.com:hongbang.lhb/admix-ui.git#daily/0.1.0"
   }<% if (appPath) { %>,
   "appPath": "<%= appPath %>"<% } %>

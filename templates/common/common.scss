@@ -30,13 +30,23 @@ $tipsColor: #cccccc;
 $disabledColor: #afafb5;
 
 //reset
+html, body, ol, ul, li, p, h1, h2, button, input, dl, dt, dd {
+    margin: 0;
+    padding: 0;
+}
+ol, ul {
+    list-style: none;
+}
 body {
+    font: 12px/1.4 'Helvetica Neue', Helvetica, Arial, sans-serif;
     overflow: auto;
     background: $bodyBgColor;
     height: auto;
     min-height: 100%;
     color: $fontColor;
+    margin: 0;
     -webkit-overflow-scrolling: touch;
+    -webkit-font-smoothing: antialiased;
 }
 a {
     color: $fontColor;

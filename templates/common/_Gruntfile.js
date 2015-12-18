@@ -438,15 +438,15 @@ module.exports = function (grunt) {
 
     if (target === 'p') { //预发
       appConfig.cdnPrefix = '//g-assets.daily.taobao.net/';
-      return grunt.task.run(['copy:pages', 'usemin', 'replace:cdnpath', 'awp:prepub']);
+      return grunt.task.run(['copy:pages', 'usemin', 'replace:cdnpath', 'inline:dist', 'awp:prepub']);
     }
     else if (target === 'o') { //线上
       appConfig.cdnPrefix = '//g.alicdn.com/';
-      return grunt.task.run(['copy:pages', 'usemin', 'replace:cdnpath', 'awp:online']);
+      return grunt.task.run(['copy:pages', 'usemin', 'replace:cdnpath', 'inline:dist', 'awp:online']);
     }
     else { //日常
       appConfig.cdnPrefix = '//g-assets.daily.taobao.net/';
-      return grunt.task.run(['copy:pages', 'usemin', 'replace:cdnpath', 'awp:daily']);
+      return grunt.task.run(['copy:pages', 'usemin', 'replace:cdnpath', 'inline:dist', 'awp:daily']);
     }
 
   });

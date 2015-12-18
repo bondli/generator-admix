@@ -16,6 +16,12 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+-webkit-box-sizing: content-box;
+   -moz-box-sizing: content-box;
+        box-sizing: content-box;
+}
+
 //colors
 $bodyBgColor: #eeeeee;
 $toolbarBgColor: #f8f8f8;

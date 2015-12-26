@@ -91,7 +91,7 @@ define(function(require, exports, module) {
 
             xmtop(apimap.deleteApi,
                 function (resJson, retType) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
                     self.afterDelete(id);
                     tips.show({
                         type : 'success',
@@ -100,7 +100,7 @@ define(function(require, exports, module) {
                     });
                 },
                 function (resJson, retType, errMsg) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
                     tips.show({
                         type : 'error',
                         title : '删除失败，请稍后再试',
@@ -159,7 +159,7 @@ define(function(require, exports, module) {
 
             xmtop(apimap.detailApi,
                 function (resJson, retType) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
 
                     loading.hide();
 
@@ -183,7 +183,7 @@ define(function(require, exports, module) {
                     }
                 },
                 function (resJson, retType, errMsg) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
 
                     loading.hide();
 

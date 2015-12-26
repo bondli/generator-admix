@@ -192,12 +192,12 @@ define(function(require, exports, module) {
 
             xmtop(apiInfo,
                 function (resJson, retType) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
                     self.afterDelete(id);
                     toast.show('操作成功，该记录已被删除!');
                 },
                 function (resJson, retType, errMsg) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
 
                     toast.show(errMsg);
                 }
@@ -262,7 +262,7 @@ define(function(require, exports, module) {
 
             xmtop(apiInfo,
                 function (resJson, retType) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
 
                     loading.hide();
 
@@ -297,7 +297,7 @@ define(function(require, exports, module) {
                     }
                 },
                 function (resJson, retType, errMsg) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
 
                     loading.hide();
 

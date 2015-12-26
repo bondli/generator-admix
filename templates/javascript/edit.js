@@ -240,7 +240,7 @@ define(function(require, exports, module) {
 
             xmtop(apimap.detailApi,
                 function (resJson, retType) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
 
                     loading.hide();
 
@@ -265,7 +265,7 @@ define(function(require, exports, module) {
                     }
                 },
                 function (resJson, retType, errMsg) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
 
                     loading.hide();
 
@@ -323,7 +323,7 @@ define(function(require, exports, module) {
 
             xmtop(apimap.updateApi,
                 function (resJson, retType) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
 
                     loading.hide();
                     isSaving = false;
@@ -355,7 +355,7 @@ define(function(require, exports, module) {
                     }
                 },
                 function (resJson, retType, errMsg) {
-                    console.log(resJson);
+                    console.log(JSON.stringify(resJson));
 
                     loading.hide();
                     isSaving = false;

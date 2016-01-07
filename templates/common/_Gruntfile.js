@@ -26,8 +26,8 @@ module.exports = function (grunt) {
       group: 'o2o',
       appName: '<%= appname %>',
       version: gitVersion.substring(gitVersion.lastIndexOf('/')+1).replace(/^\s+|\s+$/g, ''),
-      dWebappId: 567,
-      oWebappId: 251,
+      dWebappId: 594,
+      oWebappId: 307,
       oWebappDir: ''
     }
   };
